@@ -11,6 +11,18 @@ module "redis" {
   resource_group_name   = "rg-shared-westeurope-01"
   location              = "westeurope"
 
+  redis_server_settings = {
+    demoredischache-shared = {
+      sku_name = "Standard"
+      capacity = 2
+    }
+  }
+
+  redis_configuration = {
+    maxmemory_reserved = 2
+    maxmemory_delta    = 2
+    maxmemory_policy   = "allkeys-lru"
+  }
 
   # Tags for Azure Resources
   tags = {
