@@ -22,6 +22,12 @@ resource "azurerm_resource_group" "rg" {
   tags     = merge({ "Name" = format("%s", var.resource_group_name) }, var.tags, )
 }
 
+data "azurerm_log_analytics_workspace" "logws" {
+  count               = var.log_analytics_workspace_name != null ? 1 : 0
+  name                = var.log_analytics_workspace_name
+  resource_group_name = local.resource_group_name
+}
+
 #---------------------------------------------------------------
 # Storage Account to keep logs and backups - Default is "false"
 #----------------------------------------------------------------
@@ -181,24 +187,12 @@ resource "azurerm_private_dns_a_record" "arecord1" {
 #------------------------------------------------------------------
 # azurerm monitoring diagnostics  - Default is "false" 
 #------------------------------------------------------------------
-/*
 resource "azurerm_monitor_diagnostic_setting" "extaudit" {
   count                      = var.log_analytics_workspace_name != null ? 1 : 0
-  name                       = lower("extaudit-${var.mysqlserver_name}-diag")
-  target_resource_id         = azurerm_mysql_server.main.id
+  name                       = lower("extaudit-${element([for n in azurerm_redis_cache.main : n.name], 0)}-diag")
+  target_resource_id         = element([for i in azurerm_redis_cache.main : i.id], 0)
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.logws.0.id
-  storage_account_id         = var.enable_threat_detection_policy ? azurerm_storage_account.storeacc.0.id : null
-
-  dynamic "log" {
-    for_each = var.extaudit_diag_logs
-    content {
-      category = log.value
-      enabled  = true
-      retention_policy {
-        enabled = false
-      }
-    }
-  }
+  storage_account_id         = var.enable_data_persistence ? azurerm_storage_account.storeacc.0.id : null
 
   metric {
     category = "AllMetrics"
@@ -209,7 +203,6 @@ resource "azurerm_monitor_diagnostic_setting" "extaudit" {
   }
 
   lifecycle {
-    ignore_changes = [log, metric]
+    ignore_changes = [metric]
   }
 }
-*/
