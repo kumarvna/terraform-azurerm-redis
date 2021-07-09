@@ -2,21 +2,11 @@
 
 Azure Cache for Redis provides an in-memory data store based on the Redis software. This terraform module helps to quickly create the open-source (OSS Redis) Azure Cache for Redis.
 
-## Resources supported
-
-* [Redis Cache Server](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache)
-* [Redis Cache Configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#redis_configuration)
-* [Redis Cache Firewall Rules](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_firewall_rule)
-* [Redis Cache Cluser](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#shard_count)
-* [Redis Cache Virtual Network Support](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#subnet_id)
-* [Redis Cache Data Persistence](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#rdb_backup_enabled)
-* [Redis Diagnostics](https://docs.microsoft.com/en-us/azure/azure-sql/database/metrics-diagnostic-telemetry-logging-streaming-export-configure?tabs=azure-portal)
-* [Private Endpoints](https://www.terraform.io/docs/providers/azurerm/r/private_endpoint.html)
-* [Private DNS zone for `privatelink` A records](https://www.terraform.io/docs/providers/azurerm/r/private_dns_zone.html)
-
 ## Module Usage
 
-```terraform
+### Azure Cache for Redis with private endpoint
+
+```hcl
 module "redis" {
   source  = "kumarvna/redis/azurerm"
   version = "1.0.0"
@@ -91,5 +81,15 @@ module "redis" {
 }
 ```
 
-Schedule maintenance for Redis. The default maintenance window is 5 hours
-This does not cover any maintenance done by Azure for updating the underlying platform.
+## Terraform Usage
+
+To run this example you need to execute following Terraform commands
+
+```hcl
+terraform init
+terraform plan
+terraform apply
+
+```
+
+Run `terraform destroy` when you don't need these resources.
