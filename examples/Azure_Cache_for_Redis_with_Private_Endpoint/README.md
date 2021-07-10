@@ -41,11 +41,11 @@ module "redis" {
   }
 
   # Nodes are patched one at a time to prevent data loss. Basic caches will have data loss.
-  # Clustered caches are patched one shard at a time.
-  # The Patch Window lasts for 5 hours from the start_hour_utc
+  # Clustered caches are patched one shard at a time. 
+  # The Patch Window lasts for 5 hours from the `start_hour_utc`
   patch_schedule = {
-    days_of_week   = "Monday"
-    start_hour_utc = 21
+    day_of_week    = "Saturday"
+    start_hour_utc = 10
   }
 
   #Azure Cache for Redis firewall filter rules are used to provide specific source IP access. 
