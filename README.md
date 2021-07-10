@@ -10,7 +10,7 @@ Azure Cache for Redis provides an in-memory data store based on the Redis softwa
 * [Redis Cache Cluser](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#shard_count)
 * [Redis Cache Virtual Network Support](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#subnet_id)
 * [Redis Cache Data Persistence](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#rdb_backup_enabled)
-* [Redis Diagnostics](https://docs.microsoft.com/en-us/azure/azure-sql/database/metrics-diagnostic-telemetry-logging-streaming-export-configure?tabs=azure-portal)
+* [Redis Monitoring Diagnostics](https://docs.microsoft.com/en-us/azure/azure-sql/database/metrics-diagnostic-telemetry-logging-streaming-export-configure?tabs=azure-portal)
 * [Private Endpoints](https://www.terraform.io/docs/providers/azurerm/r/private_endpoint.html)
 * [Private DNS zone for `privatelink` A records](https://www.terraform.io/docs/providers/azurerm/r/private_dns_zone.html)
 
@@ -127,7 +127,7 @@ By default, this feature not enabled on this module. To create private link with
 
 For more details: [Private Link for Azure Database for MySQL](https://docs.microsoft.com/en-us/azure/mysql/concepts-data-access-security-private-link)
 
-> [!IMPORTANT]
+> **[IMPORTANT]**
 > There is a `publicNetworkAccess` flag which is `Disabled` by default. This flag is meant to allow you to optionally allow both public and private endpoint access to the cache if it is set to `Enabled`. If set to `Disabled`, it will only allow private endpoint access. You can set the value to `Disabled` or `Enabled`.
 >
 ## Recommended naming and tagging conventions
@@ -135,7 +135,7 @@ For more details: [Private Link for Azure Database for MySQL](https://docs.micro
 Applying tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name `Environment` and the value `Production` to all the resources in production.
 For recommendations on how to implement a tagging strategy, see Resource naming and tagging decision guide.
 
-> [!IMPORTANT]
+> [IMPORTANT]
 > Tag names are case-insensitive for operations. A tag with a tag name, regardless of the casing, is updated or retrieved. However, the resource provider might keep the casing you provide for the tag name. You'll see that casing in cost reports. **Tag values are case-sensitive.**
 >
 
