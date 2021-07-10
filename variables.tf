@@ -44,13 +44,18 @@ variable "redis_server_settings" {
     replicas_per_master           = optional(number)
     shard_count                   = optional(number)
     zones                         = optional(list(string))
-    patch_schedule = optional(object({
-      days_of_week   = optional(string)
-      start_hour_utc = optional(number)
-    }))
   }))
   description = "optional redis server setttings for both Premium and Standard/Basic SKU"
   default     = {}
+}
+
+variable "patch_schedule" {
+  type = object({
+    day_of_week    = string
+    start_hour_utc = number
+  })
+  description = "The window for redis maintenance. The Patch Window lasts for 5 hours from the `start_hour_utc` "
+  default     = null
 }
 
 variable "subnet_id" {

@@ -54,6 +54,14 @@ module "redis" {
     maxmemory_policy   = "allkeys-lru"
   }
 
+  # Nodes are patched one at a time to prevent data loss. Basic caches will have data loss.
+  # Clustered caches are patched one shard at a time.
+  # The Patch Window lasts for 5 hours from the start_hour_utc
+  patch_schedule = {
+    days_of_week   = "Monday"
+    start_hour_utc = 21
+  }
+
   #Azure Cache for Redis firewall filter rules are used to provide specific source IP access. 
   # Azure Redis Cache access is determined based on start and end IP address range specified. 
   # As a rule, only specific IP addresses should be granted access, and all others denied.

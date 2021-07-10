@@ -93,14 +93,28 @@ resource "azurerm_redis_cache" "main" {
     rdb_backup_max_snapshot_count   = each.value["sku_name"] == "Premium" && var.enable_data_persistence == true ? var.data_persistence_backup_max_snapshot_count : null
     rdb_storage_connection_string   = each.value["sku_name"] == "Premium" && var.enable_data_persistence == true ? azurerm_storage_account.storeacc.0.primary_blob_connection_string : null
   }
-
+  /*
   patch_schedule {
     day_of_week    = each.value.patch_schedule["days_of_week"]
     start_hour_utc = each.value.patch_schedule["start_hour_utc"]
   }
 
+  patch_schedule {
+    day_of_week    = lookup(var.patch_schedule, "day_of_week")
+    start_hour_utc = lookup(var.patch_schedule, "start_hour_utc")
+  }
+*/
+
+  dynamic "patch_schedule" {
+    for_each = var.patch_schedule != null ? [var.patch_schedule] : []
+    content {
+      day_of_week    = var.patch_schedule.day_of_week    #lookup(var.patch_schedule, "day_of_week", null)
+      start_hour_utc = var.patch_schedule.start_hour_utc #lookup(var.patch_schedule, "start_hour_utc", null)
+    }
+  }
+
   lifecycle {
-    # A bug in the Redis API where the original storage connection string isn't being returned
+    # A bug in the Redis API where the original storage connection string isn't being returneds
     ignore_changes = [redis_configuration.0.rdb_storage_connection_string]
   }
 }

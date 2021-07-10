@@ -29,10 +29,6 @@ module "redis" {
       shard_count         = 3
       zones               = ["1", "2", "3"]
       enable_non_ssl_port = true
-      patch_schedule = {
-        days_of_week   = "Monday"
-        start_hour_utc = 21
-      }
     }
   }
 
@@ -42,6 +38,14 @@ module "redis" {
     maxmemory_reserved = 2
     maxmemory_delta    = 2
     maxmemory_policy   = "allkeys-lru"
+  }
+
+  # Nodes are patched one at a time to prevent data loss. Basic caches will have data loss.
+  # Clustered caches are patched one shard at a time.
+  # The Patch Window lasts for 5 hours from the start_hour_utc
+  patch_schedule = {
+    days_of_week   = "Monday"
+    start_hour_utc = 21
   }
 
   #Azure Cache for Redis firewall filter rules are used to provide specific source IP access. 

@@ -15,7 +15,8 @@ output "redis_cache_ssl_port" {
 
 output "redis_cache_port" {
   description = "The non-SSL Port of the Redis Instance"
-  value       = element(concat([for p in azurerm_redis_cache.main : p.port], [""]), 0)
+  value       = element(concat([for p in azurerm_redis_cache.main : p.port if p == true], [""]), 0)
+  sensitive   = true
 }
 
 output "redis_cache_primary_access_key" {

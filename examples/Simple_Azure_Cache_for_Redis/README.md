@@ -37,6 +37,14 @@ module "redis" {
     maxmemory_policy   = "allkeys-lru"
   }
 
+  # Nodes are patched one at a time to prevent data loss. Basic caches will have data loss.
+  # Clustered caches are patched one shard at a time. 
+  # The Patch Window lasts for 5 hours from the `start_hour_utc`
+  patch_schedule = {
+    day_of_week    = "Saturday"
+    start_hour_utc = 10
+  }
+
   # (Optional) To enable Azure Monitoring for Azure Cache for Redis
   # (Optional) Specify `storage_account_name` to save monitoring logs to storage. 
   log_analytics_workspace_name = "loganalytics-we-sharedtest2"

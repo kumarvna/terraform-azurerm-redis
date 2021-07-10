@@ -16,6 +16,7 @@ output "redis_cache_ssl_port" {
 output "redis_cache_port" {
   description = "The non-SSL Port of the Redis Instance"
   value       = module.redis.redis_cache_port
+  sensitive   = true
 }
 
 output "redis_cache_primary_access_key" {
