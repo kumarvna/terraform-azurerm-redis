@@ -10,7 +10,7 @@ Azure Cache for Redis provides an in-memory data store based on the Redis softwa
 * [Redis Cache Cluser](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#shard_count)
 * [Redis Cache Virtual Network Support](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#subnet_id)
 * [Redis Cache Data Persistence](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/redis_cache#rdb_backup_enabled)
-* [Redis Monitoring Diagnostics](https://docs.microsoft.com/en-us/azure/azure-sql/database/metrics-diagnostic-telemetry-logging-streaming-export-configure?tabs=azure-portal)
+* [Monitor Azure Cache for Redis](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-how-to-monitor)
 * [Private Endpoints](https://www.terraform.io/docs/providers/azurerm/r/private_endpoint.html)
 * [Private DNS zone for `privatelink` A records](https://www.terraform.io/docs/providers/azurerm/r/private_dns_zone.html)
 
@@ -74,7 +74,7 @@ module "redis" {
   }
 
   # Creating Private Endpoint requires, VNet name and address prefix to create a subnet
-  # By default this will create a `privatelink.mysql.database.azure.com` DNS zone. 
+  # By default this will create a `privatelink.redis.cache.windows.net` DNS zone. 
   # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name
   # Private endpoints doesn't work If using `subnet_id` to create redis inside a specified VNet.
   enable_private_endpoint       = true
@@ -117,7 +117,7 @@ module "redis" {
 
 ### Zones
 
-### Private Link to Azure Database for MySQL
+### Private Link for Azure Cache for Redis
 
 Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service into your VNet.
 
@@ -125,7 +125,7 @@ With Private Link, Microsoft offering the ability to associate a logical server 
 
 By default, this feature not enabled on this module. To create private link with private endpoints set the variable `enable_private_endpoint` to `true` and provide `virtual_network_name`, `private_subnet_address_prefix` with a valid values. You can also use the existing private DNS zone to create DNS records. To use this feature, set the `existing_private_dns_zone` with a valid existing private DNS zone name.
 
-For more details: [Private Link for Azure Database for MySQL](https://docs.microsoft.com/en-us/azure/mysql/concepts-data-access-security-private-link)
+For more details: [Azure Cache for Redis with Azure Private Link](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link)
 
 > **[IMPORTANT]**
 > There is a `publicNetworkAccess` flag which is `Disabled` by default. This flag is meant to allow you to optionally allow both public and private endpoint access to the cache if it is set to `Enabled`. If set to `Disabled`, it will only allow private endpoint access. You can set the value to `Disabled` or `Enabled`.
