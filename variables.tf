@@ -59,7 +59,7 @@ variable "patch_schedule" {
 }
 
 variable "subnet_id" {
-  description = "The ID of the Subnet within which the Redis Cache should be deployed. Only available when using the Premium SKU and this subnet s "
+  description = "The ID of the Subnet within which the Redis Cache should be deployed. Only available when using the Premium SKU"
   default     = null
 }
 
@@ -82,7 +82,7 @@ variable "storage_account_name" {
 }
 
 variable "enable_data_persistence" {
-  description = " Enable or disbale Redis Database Backup. Only supported on Premium SKU's"
+  description = "Enable or disbale Redis Database Backup. Only supported on Premium SKU's"
   default     = false
 }
 
@@ -106,7 +106,7 @@ variable "firewall_rules" {
 }
 
 variable "enable_private_endpoint" {
-  description = "Manages a Private Endpoint to Azure database for MySQL"
+  description = "Manages a Private Endpoint to Azure database for Redis"
   default     = false
 }
 

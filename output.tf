@@ -59,12 +59,12 @@ output "redis_cache_private_dns_zone_domain" {
 }
 
 output "redis_cache_private_endpoint_ip" {
-  description = "Redis Cache server private endpoint IPv4 Addresses "
+  description = "Redis Cache server private endpoint IPv4 Addresses"
   value       = var.enable_private_endpoint ? element(concat(data.azurerm_private_endpoint_connection.private-ip1.*.private_service_connection.0.private_ip_address, [""]), 0) : null
 }
 
 output "redis_cache_private_endpoint_fqdn" {
-  description = "Redis Cache server private endpoint FQDN Addresses "
+  description = "Redis Cache server private endpoint FQDN Addresses"
   value       = var.enable_private_endpoint ? element(concat(azurerm_private_dns_a_record.arecord1.*.fqdn, [""]), 0) : null
 }
 
