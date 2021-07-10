@@ -39,10 +39,6 @@ module "redis" {
       shard_count         = 3
       zones               = ["1", "2", "3"]
       enable_non_ssl_port = true
-      patch_schedule = {
-        days_of_week   = "Monday"
-        start_hour_utc = 21
-      }
     }
   }
 
