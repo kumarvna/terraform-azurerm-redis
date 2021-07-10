@@ -29,7 +29,7 @@ module "redis" {
     maxmemory_policy   = "allkeys-lru"
   }
 
-  #Azure Cache for Redis firewall filter rules are used to provide specific source IP access. 
+  # Azure Cache for Redis firewall filter rules are used to provide specific source IP access. 
   # Azure Redis Cache access is determined based on start and end IP address range specified. 
   # As a rule, only specific IP addresses should be granted access, and all others denied.
   # "name" (ex. azure_to_azure or desktop_ip) may only contain alphanumeric characters and underscores
