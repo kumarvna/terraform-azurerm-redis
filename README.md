@@ -110,7 +110,7 @@ This object to help set up the various settings for Azure Cache for Redis instan
 public_network_access_enabled|Whether or not public network access is allowed for this Redis Cache. `true` means this resource could be accessed by both public and private endpoint. `false` means only private endpoint access is allowed. Defaults to `true`.
 `replicas_per_master`|Amount of replicas to create per master for this Redis Cache. When the primary VM becomes unavailable, the replica detects that and takes over as the new primary automatically. You can now increase the number of replicas in a Premium cache up to three, giving you a total of four VMs backing a cache. Having multiple replicas results in higher resilience than what a single replica can provide. Only available when using the Premium SKU and cannot be used in conjunction with `shards`.
 `shard_count`| The number of Shards to create on the Redis Cluster. In Azure, Redis cluster is offered as a primary/replica model where each shard has a primary/replica pair with replication, where the replication is managed by Azure Cache for Redis service. Only available when using the Premium SKU.
-`subnet_id`|The ID of the Subnet within which the Redis Cache should be deployed. This Subnet must only contain Azure Cache for Redis instances without any other type of resources. Azure Virtual Network deployment provides enhanced security and isolation along with: subnets, access control policies, and other features to restrict access further. When an Azure Cache for Redis instance is configured with a virtual network, it isn't publicly addressable. Instead, the instance can only be accessed from virtual machines and applications within the virtual network. For more detials, check [configure virtual network for Premium Cache](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-how-to-premium-vnet) 
+`subnet_id`|The ID of the Subnet within which the Redis Cache should be deployed. This Subnet must only contain Azure Cache for Redis instances without any other type of resources. Azure Virtual Network deployment provides enhanced security and isolation along with: subnets, access control policies, and other features to restrict access further. When an Azure Cache for Redis instance is configured with a virtual network, it isn't publicly addressable. Instead, the instance can only be accessed from virtual machines and applications within the virtual network. For more detials, check [configure virtual network for Premium Cache](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-how-to-premium-vnet)
 `zones`|Azure Cache for Redis supports zone redundant configurations in the Premium and Enterprise tiers. A zone redundant cache can place its nodes across different Azure Availability Zones in the same region. It eliminates datacenter or AZ outage as a single point of failure and increases the overall availability of your cache.
 
 ## `redis_configuration` - Azure Cache for Redis advance configuration
@@ -126,13 +126,19 @@ This object to help set up the advance memory and other settings for Azure Cache
 `maxmemory_policy`|configures the eviction policy for the cache and allows you to choose from the following eviction policies: `volatile-lru`, `allkeys-lru`, `volatile-random`, `allkeys-random`, `volatile-ttl`, `noeviction`. For more information about maxmemory policies, see [Eviction policies](https://redis.io/topics/lru-cache#eviction-policies)
 `notify_keyspace_events`|Keyspace notifications allows clients to subscribe to Pub/Sub channels in order to receive events affecting the Redis data set in some way. [Reference](https://redis.io/topics/notifications#configuration)
 
-### Firewall Rules
+## Data Persistence
 
-### Virtual network
+RDB persistence - When you use RDB persistence, Azure Cache for Redis persists a snapshot of the Azure Cache for Redis in a Redis to disk in binary format. The snapshot is saved in an Azure Storage account. The configurable backup frequency determines how often to persist the snapshot.
 
-### Data Persistence
+By default, RDB backup feature not enabled on this module. To enable RDB backup, set the variable `enable_data_persistence` to `true` also provide a valid values to `rdb_backup_frequency` and `rdb_backup_max_snapshot_count`. The Backup Frequency in Minutes. Possible values are: `15`, `30`, `60`, `360`, `720` and `1440`. Default to `60` mintues. Only available when using the Premium SKU.
 
-### Patching Schedule
+## Patching Schedule - Scheduling updates
+
+Schedule updates allows you to choose a maintenance window for your cache instance. A maintenance window allows you to control the day(s) and time(s) of a week during which the VM(s) hosting your cache can be updated.
+
+By default, Scheduling the updates are not enabled. To specify the maintenance window, set `patch_schedule` with `day_of_week` and `start_hour_utc` values. The default, and minimum, maintenance window for updates is 5 hours.
+
+## Azure Cache for Redis network isolation options
 
 ### Private Link for Azure Cache for Redis
 
@@ -147,6 +153,28 @@ For more details: [Azure Cache for Redis with Azure Private Link](https://docs.m
 > **[IMPORTANT]**
 > There is a `publicNetworkAccess` flag which is `Disabled` by default. This flag is meant to allow you to optionally allow both public and private endpoint access to the cache if it is set to `Enabled`. If set to `Disabled`, it will only allow private endpoint access. You can set the value to `Disabled` or `Enabled`.
 >
+#### Limitations
+
+* Network security groups (NSG) are disabled for private endpoints. However, if there are other resources on the subnet, NSG enforcement will apply to those resources.
+* Currently, portal console support, and persistence to firewall storage accounts are not supported.
+* To connect to a clustered cache, publicNetworkAccess needs to be set to Disabled and there can only be one private endpoint connection.
+
+### Azure Virtual Network injection
+
+Azure Virtual Network deployment provides enhanced security and isolation along with: subnets, access control policies, and other features to restrict access further. When an Azure Cache for Redis instance is configured with a virtual network, it isn't publicly addressable. Instead, the instance can only be accessed from virtual machines and applications within the virtual network.
+
+By default this feature not enabled on this module. To enable VNet, set the variable `subnet_id` to a valid subnet resource ID.
+
+VNet injected caches are only available for Premium Azure Cache for Redis. When using a VNet injected cache, you must change your VNet to cache dependencies such as CRLs/PKI, AKV, Azure Storage, Azure Monitor, and more.
+
+### Azure Firewall rules
+
+When firewall rules are configured, only client connections from the specified IP address ranges can connect to the cache. Connections from Azure Cache for Redis monitoring systems are always permitted, even if firewall rules are configured. NSG rules that you define are also permitted.
+
+By default this feature not enabled on this module. To enable Firewall rules, provide a list of  `firewall_rules` wiht a valid `start_ip` and `end_ip` blocks.
+
+>Firewall rules can be used with VNet injected caches, but not private endpoints currently.
+
 ## Recommended naming and tagging conventions
 
 Applying tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name `Environment` and the value `Production` to all the resources in production.
@@ -197,7 +225,7 @@ An effective naming convention assembles resource names by using important resou
 `existing_private_dns_zone`|Name of the existing private DNS zone|string|`null`
 `Tags` | A map of tags to add to all resources | map | `{}`
 
-# Outputs
+## Outputs
 
 | Name | Description |
 |--|--|
