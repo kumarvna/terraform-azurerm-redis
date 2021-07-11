@@ -126,21 +126,9 @@ This object to help set up the advance memory and other settings for Azure Cache
 `maxmemory_policy`|configures the eviction policy for the cache and allows you to choose from the following eviction policies: `volatile-lru`, `allkeys-lru`, `volatile-random`, `allkeys-random`, `volatile-ttl`, `noeviction`. For more information about maxmemory policies, see [Eviction policies](https://redis.io/topics/lru-cache#eviction-policies)
 `notify_keyspace_events`|Keyspace notifications allows clients to subscribe to Pub/Sub channels in order to receive events affecting the Redis data set in some way. [Reference](https://redis.io/topics/notifications#configuration)
 
-## Data Persistence
-
-RDB persistence - When you use RDB persistence, Azure Cache for Redis persists a snapshot of the Azure Cache for Redis in a Redis to disk in binary format. The snapshot is saved in an Azure Storage account. The configurable backup frequency determines how often to persist the snapshot.
-
-By default, RDB backup feature not enabled on this module. To enable RDB backup, set the variable `enable_data_persistence` to `true` also provide a valid values to `rdb_backup_frequency` and `rdb_backup_max_snapshot_count`. The Backup Frequency in Minutes. Possible values are: `15`, `30`, `60`, `360`, `720` and `1440`. Default to `60` mintues. Only available when using the Premium SKU.
-
-## Patching Schedule - Scheduling updates
-
-Schedule updates allows you to choose a maintenance window for your cache instance. A maintenance window allows you to control the day(s) and time(s) of a week during which the VM(s) hosting your cache can be updated.
-
-By default, Scheduling the updates are not enabled. To specify the maintenance window, set `patch_schedule` with `day_of_week` and `start_hour_utc` values. The default, and minimum, maintenance window for updates is 5 hours.
-
 ## Azure Cache for Redis network isolation options
 
-### Private Link for Azure Cache for Redis
+### 1. Private Link for Azure Cache for Redis
 
 Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service into your VNet.
 
@@ -159,7 +147,7 @@ For more details: [Azure Cache for Redis with Azure Private Link](https://docs.m
 * Currently, portal console support, and persistence to firewall storage accounts are not supported.
 * To connect to a clustered cache, publicNetworkAccess needs to be set to Disabled and there can only be one private endpoint connection.
 
-### Azure Virtual Network injection
+### 2. Azure Virtual Network injection
 
 Azure Virtual Network deployment provides enhanced security and isolation along with: subnets, access control policies, and other features to restrict access further. When an Azure Cache for Redis instance is configured with a virtual network, it isn't publicly addressable. Instead, the instance can only be accessed from virtual machines and applications within the virtual network.
 
@@ -167,13 +155,25 @@ By default this feature not enabled on this module. To enable VNet, set the vari
 
 VNet injected caches are only available for Premium Azure Cache for Redis. When using a VNet injected cache, you must change your VNet to cache dependencies such as CRLs/PKI, AKV, Azure Storage, Azure Monitor, and more.
 
-### Azure Firewall rules
+### 3. Azure Firewall rules
 
 When firewall rules are configured, only client connections from the specified IP address ranges can connect to the cache. Connections from Azure Cache for Redis monitoring systems are always permitted, even if firewall rules are configured. NSG rules that you define are also permitted.
 
 By default this feature not enabled on this module. To enable Firewall rules, provide a list of  `firewall_rules` wiht a valid `start_ip` and `end_ip` blocks.
 
 >Firewall rules can be used with VNet injected caches, but not private endpoints currently.
+
+## Data Persistence
+
+RDB persistence - When you use RDB persistence, Azure Cache for Redis persists a snapshot of the Azure Cache for Redis in a Redis to disk in binary format. The snapshot is saved in an Azure Storage account. The configurable backup frequency determines how often to persist the snapshot.
+
+By default, RDB backup feature not enabled on this module. To enable RDB backup, set the variable `enable_data_persistence` to `true` also provide a valid values to `rdb_backup_frequency` and `rdb_backup_max_snapshot_count`. The Backup Frequency in Minutes. Possible values are: `15`, `30`, `60`, `360`, `720` and `1440`. Default to `60` mintues. Only available when using the Premium SKU.
+
+## Patching Schedule - Scheduling updates
+
+Schedule updates allows you to choose a maintenance window for your cache instance. A maintenance window allows you to control the day(s) and time(s) of a week during which the VM(s) hosting your cache can be updated.
+
+By default, Scheduling the updates are not enabled. To specify the maintenance window, set `patch_schedule` with `day_of_week` and `start_hour_utc` values. The default, and minimum, maintenance window for updates is 5 hours.
 
 ## Recommended naming and tagging conventions
 
