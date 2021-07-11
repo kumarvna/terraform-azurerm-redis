@@ -46,23 +46,3 @@ output "redis_configuration_maxclients" {
   description = "Returns the max number of connected clients at the same time."
   value       = module.redis.redis_configuration_maxclients
 }
-
-output "redis_cache_private_endpoint" {
-  description = "id of the Redis Cache server Private Endpoint"
-  value       = module.redis.redis_cache_private_endpoint
-}
-
-output "redis_cache_private_dns_zone_domain" {
-  description = "DNS zone name of Redis Cache server Private endpoints dns name records"
-  value       = module.redis.redis_cache_private_dns_zone_domain
-}
-
-output "redis_cache_private_endpoint_ip" {
-  description = "Redis Cache server private endpoint IPv4 Addresses "
-  value       = module.redis.redis_cache_private_endpoint_ip
-}
-
-output "redis_cache_private_endpoint_fqdn" {
-  description = "Redis Cache server private endpoint FQDN Addresses "
-  value       = module.redis.redis_cache_private_endpoint_fqdn
-}
