@@ -97,13 +97,34 @@ module "redis" {
 
 ## `redis_server_settings` - Azure Cache for Redis Server Settings
 
-## `redis_configuration` - Azure Cache for Redis configuration
+This object to help set up the various settings for Azure Cache for Redis instances and supports following arguments.
 
-## Advanced Usage of the Module
+| Argument | Description |
+|--|--|
+`capacity`|The size of the Redis cache to deploy. Valid values for a SKU family of `C` (`Basic`/`Standard`) are `0`, `1`, `2`, `3`, `4`, `5`, `6`, and for `P` (`Premium`) family are `1`, `2`, `3`, `4`
+`family`|The SKU family/pricing group to use. Valid values are `C` (for `Basic`/`Standard` SKU family) and `P` (for `Premium`)
+`sku_name`|The SKU of Redis to use. Possible values are `Basic`, `Standard` and `Premium`.
+`enable_non_ssl_port` |Enable the non-SSL port (6379). By default, non-TLS/SSL access is disabled for new caches.
+`minimum_tls_version`|Defaults to `1.0`. TLS access to Azure Cache for Redis supports TLS 1.0, 1.1 and 1.2 currently, but versions 1.0 and 1.1 are being retired soon.
+`private_static_ip_address`|The Static IP Address to assign to the Redis Cache when hosted inside the Virtual Network. If you don't specify a static IP address, an IP address is chosen automatically.
+public_network_access_enabled|Whether or not public network access is allowed for this Redis Cache. `true` means this resource could be accessed by both public and private endpoint. `false` means only private endpoint access is allowed. Defaults to `true`.
+`replicas_per_master`|Amount of replicas to create per master for this Redis Cache. When the primary VM becomes unavailable, the replica detects that and takes over as the new primary automatically. You can now increase the number of replicas in a Premium cache up to three, giving you a total of four VMs backing a cache. Having multiple replicas results in higher resilience than what a single replica can provide. Only available when using the Premium SKU and cannot be used in conjunction with `shards`.
+`shard_count`| The number of Shards to create on the Redis Cluster. In Azure, Redis cluster is offered as a primary/replica model where each shard has a primary/replica pair with replication, where the replication is managed by Azure Cache for Redis service. Only available when using the Premium SKU.
+`subnet_id`|The ID of the Subnet within which the Redis Cache should be deployed. This Subnet must only contain Azure Cache for Redis instances without any other type of resources. Azure Virtual Network deployment provides enhanced security and isolation along with: subnets, access control policies, and other features to restrict access further. When an Azure Cache for Redis instance is configured with a virtual network, it isn't publicly addressable. Instead, the instance can only be accessed from virtual machines and applications within the virtual network. For more detials, check [configure virtual network for Premium Cache](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-how-to-premium-vnet) 
+`zones`|Azure Cache for Redis supports zone redundant configurations in the Premium and Enterprise tiers. A zone redundant cache can place its nodes across different Azure Availability Zones in the same region. It eliminates datacenter or AZ outage as a single point of failure and increases the overall availability of your cache.
 
-### Memory Management
+## `redis_configuration` - Azure Cache for Redis advance configuration
 
-### Non-SSL port
+This object to help set up the advance memory and other settings for Azure Cache for Redis instances and supports following arguments.
+
+| Argument | Description |
+|--|--|
+`enable_authentication`| If set to `false`, the Redis instance will be accessible without authentication. can only be set to false if a `subnet_id` is specified; and only works if there aren't existing instances within the subnet with `enable_authentication` set to `true`. Defaults to `true`
+`maxfragmentationmemory_reserved`|Value in megabytes reserved to accommodate for memory fragmentation. When you set this value, you to have a more consistent Redis server experience when the cache is full or close to full and the fragmentation ratio is high. When memory is reserved for such operations, it's unavailable for storage of cached data. Available only for `Standard` and `Premium` caches.
+`maxmemory_reserved`| Value in megabytes reserved for non-cache usage e.g. failover. Setting this value allows you to have a more consistent Redis server experience when your load varies. This value should be set higher for workloads that write large amounts of data. When memory is reserved for such operations, it's unavailable for storage of cached data. Available only for `Standard` and `Premium` caches.
+`maxmemory_delta`|The max-memory delta for this Redis instance.
+`maxmemory_policy`|configures the eviction policy for the cache and allows you to choose from the following eviction policies: `volatile-lru`, `allkeys-lru`, `volatile-random`, `allkeys-random`, `volatile-ttl`, `noeviction`. For more information about maxmemory policies, see [Eviction policies](https://redis.io/topics/lru-cache#eviction-policies)
+`notify_keyspace_events`|Keyspace notifications allows clients to subscribe to Pub/Sub channels in order to receive events affecting the Redis data set in some way. [Reference](https://redis.io/topics/notifications#configuration)
 
 ### Firewall Rules
 
@@ -112,10 +133,6 @@ module "redis" {
 ### Data Persistence
 
 ### Patching Schedule
-
-### Cluster Support
-
-### Zones
 
 ### Private Link for Azure Cache for Redis
 
